@@ -1,0 +1,23 @@
+# dependencies
+/node_modules
+
+# production
+/dist
+/.prefabs
+
+# tmp
+/tmp
+
+# misc
+.DS_Store
+.vscode/
+.nvmrc
+.tool-versions
+.idea
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# swp files
+*.swp

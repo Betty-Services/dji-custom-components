@@ -1,0 +1,83 @@
+{
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["react", "react-hooks", "prettier"],
+  "env": {
+    "browser": true,
+    "jasmine": true
+  },
+  "rules": {
+    "jsx-a11y/media-has-caption": "off",
+    "react/destructuring-assignment": "off",
+    "react/display-name": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-no-useless-fragment": "off",
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js"] }],
+    "react/jsx-no-undef": ["error", { "allowGlobals": true }],
+    "react/prefer-exact-props": "off",
+    "react/prop-types": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "no-restricted-globals": "off",
+    "import/no-default-export": "warn",
+    "import/prefer-default-export": "off",
+    "prettier/prettier": [
+      "error",
+      { "singleQuote": true, "trailingComma": "all" }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.ts", "src/**/*.tsx"],
+      "extends": [
+        "airbnb",
+        "airbnb/hooks",
+        "airbnb-typescript",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:prettier/recommended"
+      ],
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      },
+      "rules": {
+        "import/no-default-export": "warn",
+        "import/prefer-default-export": "off"
+      }
+    },
+    {
+      "files": ["src/prefabs/*.ts", "src/prefabs/*.tsx", "src/index.js"],
+      "rules": {
+        "import/no-default-export": "off",
+        "import/prefer-default-export": "error"
+      }
+    }
+  ],
+  "globals": {
+    "B": "readonly",
+    "classes": "readonly",
+    "children": "readonly",
+    "index": "readonly",
+    "parent": "readonly",
+    "options": "readonly",
+    "React": "readonly",
+    "state": "readonly",
+    "setState": "readonly",
+    "useCallback": "readonly",
+    "useEffect": "readonly",
+    "useLocation": "readonly",
+    "usePageState": "readonly",
+    "useReducer": "readonly",
+    "useRef": "readonly",
+    "useRouter": "readonly",
+    "useState": "readonly",
+    "useHistory": "readonly",
+    "useOptions": "readonly",
+    "dependencies": "readonly",
+    "includeStyling": "readonly"
+  }
+}
