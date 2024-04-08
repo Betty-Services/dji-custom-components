@@ -1,4 +1,16 @@
-import { ThemeColor, color, font, icon, number, option, showIf, sizes, text, toggle, variable } from '@betty-blocks/component-sdk';
+import {
+  ThemeColor,
+  color,
+  font,
+  icon,
+  number,
+  option,
+  showIf,
+  sizes,
+  text,
+  toggle,
+  variable,
+} from '@betty-blocks/component-sdk';
 import { advanced } from '../../advanced';
 
 export const categories = [

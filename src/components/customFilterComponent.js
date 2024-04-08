@@ -441,11 +441,11 @@
       return properties.find((prop) => prop.id === id);
     };
 
-    const PropertySelector = ({
+    function PropertySelector({
       properties = [],
       onChange = () => undefined,
       selectedProperty = '',
-    }) => {
+    }) {
       return (
         <>
           <TextField
@@ -470,7 +470,7 @@
           </TextField>
         </>
       );
-    };
+    }
 
     const getGroup = (groupId) => {
       return groups.find((group) => group.id === groupId);
@@ -481,17 +481,17 @@
       return value[level];
     };
 
-    const LeftValueInput = ({
+    function LeftValueInput({
       properties = [],
       level = 0,
-      setRowPropertyValue = (value = '', properties = [], level = 0) => {},
+      setRowPropertyValue = (value = '', properties = [], level = 0) => { },
       leftValue = '',
-    }) => {
+    }) {
       const [value, setValue] = useState(getLeftValue(leftValue, level));
       const prop = filterMappedProperties(properties, value);
 
       const onChange = (e) => {
-        const value = e.target.value;
+        const { value } = e.target;
         setValue(value);
         setRowPropertyValue(value, properties, level);
       };
@@ -513,18 +513,18 @@
           )}
         </>
       );
-    };
+    }
 
-    const OperatorSwitch = ({
+    function OperatorSwitch({
       prop = '',
-      setOperatorValue = () => {},
+      setOperatorValue = () => { },
       operator: value = 'eq',
-    }) => {
+    }) {
       const operators = filterOperators(prop ? prop.kind : '');
       const [operator, setOperator] = useState(value);
 
       const onChange = (e) => {
-        const value = e.target.value;
+        const { value } = e.target;
         setOperator(value);
         setOperatorValue(value);
       };
@@ -549,17 +549,17 @@
           })}
         </TextField>
       );
-    };
+    }
     const handleSetFilterGroups = useCallback((newGroups) => {
       setGroups(newGroups);
     }, []);
 
-    const RightValueInput = ({
+    function RightValueInput({
       prop,
       operator,
-      setRightValue = (value) => {},
+      setRightValue = (value) => { },
       rightValue: value = '',
-    }) => {
+    }) {
       if (operator === 'ex' || operator === 'nex') {
         return <></>;
       }
@@ -578,23 +578,21 @@
       const isSpecialType = operator === 'ex' || operator === 'nex';
 
       const handleChange = (e) => {
-        const { type } = e.target.dataset;
-
-        if (type === 'date') {
+        if (isDateType) {
           const d = new Date(e);
           const newRightValue = d.toISOString().split('T')[0];
           setRightValueState(newRightValue);
-        } else if (type === 'checkbox') {
+        } else if (isBooleanType) {
           const newRightValue = e.target.checked;
           setRightValueState(newRightValue);
           setRightValue(newRightValue);
-        } else if (type === 'number') {
-          const value = e.target.value;
-          let newRightValue = Number(value);
+        } else if (isNumberType || isDateTimeType) {
+          const { value: v } = e.target;
+          const newRightValue = Number(v);
           setRightValueState(newRightValue);
         } else {
-          const value = e.target.value;
-          let newRightValue = value;
+          const { value: v } = e.target;
+          const newRightValue = v;
           setRightValueState(newRightValue);
         }
       };
@@ -602,7 +600,8 @@
       const handleChangeDate = (date, type = 'date') => {
         let newRightValue = '';
         if (type === 'date') {
-          newRightValue = date.toISOString().split('T')[0];
+          const [d] = date.toISOString().split('T');
+          newRightValue = d;
         } else {
           newRightValue = date.toISOString();
         }
@@ -663,7 +662,7 @@
               KeyboardButtonProps={{
                 'aria-label': 'change date',
               }}
-              allowKeyboardControl={true}
+              allowKeyboardControl
               onChange={(date) => {
                 handleChangeDate(date, 'date');
               }}
@@ -703,7 +702,7 @@
               KeyboardButtonProps={{
                 'aria-label': 'change date',
               }}
-              allowKeyboardControl={true}
+              allowKeyboardControl
               onChange={(date) => handleChangeDate(date, 'dateTime')}
               onBlur={handleBlur}
             />
@@ -743,9 +742,7 @@
             style={{ width: '100%' }}
             fullWidth
             variant="outlined"
-            inputProps={{
-              'data-type': 'list',
-            }}
+            data-type="list"
             onChange={handleChange}
             onBlur={handleBlur}
           >
@@ -775,7 +772,7 @@
           onBlur={handleBlur}
         />
       );
-    };
+    }
 
     const updateRow = (rowId, newRow) => {
       const newGroups = groups.map((group) => {
@@ -792,7 +789,7 @@
       handleSetFilterGroups(newGroups);
     };
 
-    const FilterRow = ({ row = {}, removeable = false }) => {
+    function FilterRow({ row = {}, removeable = false }) {
       if (!modelId) return <p>Please select a model</p>;
 
       const mappedWhiteList = mapWhitelist(propertyWhiteList);
@@ -909,9 +906,9 @@
           </div>
         </div>
       );
-    };
+    }
 
-    const FilterRowDev = () => {
+    function FilterRowDev() {
       return (
         <div style={{ width: '100%', marginBottom: '10px' }}>
           <TextField
@@ -937,7 +934,7 @@
           </IconButton>
         </div>
       );
-    };
+    }
 
     const addFilter = (tree, groupId) => {
       const newRow = {
@@ -958,7 +955,7 @@
       });
     };
 
-    const AddFilterRowButton = ({ group }) => {
+    function AddFilterRowButton({ group }) {
       const handleAddGroup = (e) => {
         e.preventDefault();
 
@@ -974,10 +971,10 @@
           onClick={handleAddGroup}
         >
           <Icon name="Add" fontSize="small" />
-          Filter rij toevoegen 
+          Filter rij toevoegen
         </Button>
       );
-    };
+    }
 
     const deleteGroup = (tree, groupId) => {
       const newTree = tree.slice();
@@ -989,7 +986,7 @@
       return newTree;
     };
 
-    const AndOrOperatorSwitch = ({ groupId }) => {
+    function AndOrOperatorSwitch({ groupId }) {
       const group = getGroup(groupId);
 
       const handleOnClick = (e) => {
@@ -1012,7 +1009,7 @@
             data-value="_and"
             onClick={handleOnClick}
           >
-           en 
+            en
           </Button>
           <Button
             disableElevation
@@ -1026,7 +1023,7 @@
           </Button>
         </ButtonGroup>
       );
-    };
+    }
 
     const handleDeleteGroup = (e) => {
       e.preventDefault();
@@ -1041,9 +1038,8 @@
       setGroupsOperator(newGroupsOperator);
     };
 
-    const RenderGroups = ({ groups }) => {
+    function RenderGroups({ groups }) {
       const mapRows = (group) => {
-        console.log('mapRows', group);
         return group.rows.map((row, i) => {
           return (
             <>
@@ -1095,7 +1091,7 @@
                     onClick={handleSetGroupsOperator}
                     data-value="_and"
                   >
-                    en 
+                    en
                   </Button>
                   <Button
                     disableElevation
@@ -1113,7 +1109,17 @@
           ))}
         </>
       );
+    }
+
+    const handleApplyFilter = () => {
+      const newFilter = makeFilter(groups);
+
+      console.info('Filter for datatable ready! Output:');
+      console.info(newFilter);
+
+      B.triggerEvent('onSubmit', newFilter);
     };
+
 
     B.defineFunction('Apply filter', () => {
       try {
@@ -1127,18 +1133,10 @@
       }
     });
 
-    const handleApplyFilter = () => {
-      const newFilter = makeFilter(groups);
-
-      console.info('Filter for datatable ready! Output:');
-      console.info(newFilter);
-
-      B.triggerEvent('onSubmit', newFilter);
-    };
 
     return (
       <div className={classes.root}>
-        <RenderGroups key={`render-group`} groups={groups} />
+        <RenderGroups key="render-group" groups={groups} />
       </div>
     );
   })(),
@@ -1197,12 +1195,12 @@
         '& .MuiInputBase-root': {
           '&.Mui-focused, &.Mui-focused:hover': {
             '& .MuiOutlinedInput-notchedOutline, & .MuiFilledInput-underline, & .MuiInput-underline':
-              {
-                borderColor: ({ options: { highlightColor } }) => [
-                  style.getColor(highlightColor),
-                  '!important',
-                ],
-              },
+            {
+              borderColor: ({ options: { highlightColor } }) => [
+                style.getColor(highlightColor),
+                '!important',
+              ],
+            },
           },
         },
       },
