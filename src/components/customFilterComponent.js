@@ -389,6 +389,7 @@
       id,
       iteration,
       whitelist = {},
+      blacklist = {},
       parent = '',
     ) => {
       if (iteration === undefined) iteration = 0;
@@ -398,6 +399,11 @@
       if (Object.keys(whitelist).length > 0) {
         filteredProps = filteredProps.filter(
           (prop) => !whitelist || whitelist[prop.name],
+        );
+      }
+      if (Object.keys(blacklist).length > 0) {
+        filteredProps = filteredProps.filter(
+          (prop) => !blacklist[prop.name]
         );
       }
 
@@ -416,6 +422,7 @@
               prop.referenceModelId,
               iteration + 1,
               whitelist ? whitelist[prop.name] : undefined,
+              blacklist,
               prop.id,
             );
             return {
@@ -793,11 +800,13 @@
       if (!modelId) return <p>Please select a model</p>;
 
       const mappedWhiteList = mapWhitelist(propertyWhiteList);
+      const mappedBlacklist = mapWhitelist(propertyBlackList)
       const mappedProperties = mapProperties(
         properties,
         modelId,
         0,
         mappedWhiteList,
+        mappedBlacklist,
       );
 
       const [filter, setFilter] = useState(row);
@@ -1119,7 +1128,6 @@
 
       B.triggerEvent('onSubmit', newFilter);
     };
-
 
     B.defineFunction('Apply filter', () => {
       try {
